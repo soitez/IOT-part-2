@@ -1,0 +1,76 @@
+#include <LiquidCrystal.h>
+
+const int buzzer = 9;
+const int sensor=A0; 
+
+
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+
+float tempc; 
+
+float tempf;
+float vout; 
+
+
+void setup() {
+   
+ pinMode(13, OUTPUT);
+pinMode(buzzer, OUTPUT);
+pinMode(sensor,INPUT); 
+
+Serial.begin(9600);
+
+
+}
+
+
+void loop() {
+
+
+vout=analogRead(sensor); 
+
+vout=(vout*500)/1023;
+
+tempc=vout; 
+
+tempf=(vout*1.8)+32; 
+
+Serial.print("in DegreeC=");
+
+Serial.print("\t");
+
+Serial.print(tempc);
+
+Serial.print(" ");
+
+
+Serial.print("in Fahrenheit=");
+
+Serial.print("\t");
+
+Serial.print(tempf);
+
+Serial.println();
+
+ lcd.begin(16, 2);
+ lcd.print("Temp");
+  lcd.print(tempc);
+  lcd.print("C");
+
+if (tempc > 37.5 ){
+  lcd.setCursor(0, 1);
+  lcd.print("High");
+  tone(buzzer, 1000); 
+  digitalWrite(13, HIGH);   
+
+  
+}else{
+ lcd.setCursor(0, 1);
+  lcd.print("Normal");
+  noTone(buzzer);
+  digitalWrite(13, LOW);  
+}
+
+delay(1000); }
